@@ -2,8 +2,6 @@
 
 
 
-
-
 # [Modular ACES OCIO Config](/ocio-configs/config_modular-aces.ocio)
 
 An OCIO config based on the [ACES 1.2 OCIO config](https://github.com/colour-science/OpenColorIO-Configs/tree/feature/aces-1.2-config/aces_1.2) from the [colour-science](https://github.com/colour-science) [OpenColorIO-Configs git repo](https://github.com/colour-science/OpenColorIO-Configs). 
@@ -56,7 +54,7 @@ We could do something like this:
           |--------|      |-------|      |-------|      |-------|      |-------|
           |        |      |       |      |       |      |       |      |       |
 ACES ---->| SHAPER |----->|  LMT  |----->| SSTS  |----->|  PRI  |----->| EOTF  |--> code values
-          |        |      |       |      |       |      |       |      |       |
+          |  (1D)  |      |  (3D) |      | (1D)  |      | (MTX) |      | (1D)  |
           |--------|      |-------|      |-------|      |-------|      |-------| 
 
 ```
