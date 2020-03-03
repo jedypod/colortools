@@ -1,0 +1,244 @@
+set cut_paste_input [stack 0]
+Read {
+ inputs 0
+ file_type tiff
+ file ./null_1d.1025.-0.3584to1.468.float.tiff
+ format "1025 1 0 0 1025 1 1 "
+ origset true
+ auto_alpha true
+ name Read20
+ tile_color 0x989898ff
+ selected true
+ xpos 2600
+ ypos 2234
+ postage_stamp false
+}
+Grade {
+ gamma 1.8
+ name Grade10
+ selected true
+ xpos 2600
+ ypos 2342
+}
+ColorLookup {
+ lut {master {curve R x-0.377576232 0 x-0.3719125688 0.003921568859 x-0.3662499189 0.007843137719 x-0.3605886102 0.01176470611 x-0.3549290001 0.01568627544 x-0.3492714763 0.01960784383 x-0.343616426 0.02352941222 x-0.3379641771 0.02745098062 x-0.3323151171 0.03137255087 x-0.3266695738 0.03529411927 x-0.3210279644 0.03921568766 x-0.3153906465 0.04313725606 x-0.3097579479 0.04705882445 x-0.304130286 0.05098039284 x-0.2985079587 0.05490196124 x-0.292891413 0.05882352963 x-0.287280947 0.06274510175 x-0.2816769779 0.06666667014 x-0.2760798335 0.07058823854 x-0.2704898715 0.07450980693 x-0.2649075091 0.07843137532 x-0.2593330741 0.08235294372 x-0.2537669539 0.08627451211 x-0.2482095063 0.09019608051 x-0.2426610738 0.0941176489 x-0.237122044 0.09803921729 x-0.2315927893 0.1019607857 x-0.2260736525 0.1058823541 x-0.2205650359 0.1098039225 x-0.2150672674 0.1137254909 x-0.2095807195 0.1176470593 x-0.2041057795 0.1215686277 x-0.1986427903 0.1254902035 x-0.1931921393 0.1294117719 x-0.1877541691 0.1333333403 x-0.1823292673 0.1372549087 x-0.1769177914 0.1411764771 x-0.171520099 0.1450980455 x-0.166136533 0.1490196139 x-0.1607671827 0.1529411823 x-0.1554120183 0.1568627506 x-0.15007101 0.160784319 x-0.1447441429 0.1647058874 x-0.1394313723 0.1686274558 x-0.1341326833 0.1725490242 x-0.1288480312 0.1764705926 x-0.1235774085 0.180392161 x-0.118320778 0.1843137294 x-0.1130781099 0.1882352978 x-0.1078493819 0.1921568662 x-0.102634564 0.1960784346 x-0.09743362665 0.200000003 x-0.09224653989 0.2039215714 x-0.08707328141 0.2078431398 x-0.0819138214 0.2117647082 x-0.07676813751 0.2156862766 x-0.0716361925 0.2196078449 x-0.06651795655 0.2235294133 x-0.0614134185 0.2274509817 x-0.05632253364 0.2313725501 x-0.05124528334 0.2352941185 x-0.04618163779 0.2392156869 x-0.04113156721 0.2431372553 x-0.03609504551 0.2470588237 x-0.03107202612 0.250980407 x-0.02606251836 0.2549019754 x-0.02106647752 0.2588235438 x-0.01608387195 0.2627451122 x-0.01111467835 0.2666666806 x-0.006158866454 0.270588249 x-0.001216408913 0.2745098174 x0.003712721867 0.2784313858 x0.008628553711 0.2823529541 x0.01353111491 0.2862745225 x0.01842043176 0.2901960909 x0.02329653315 0.2941176593 x0.02815944701 0.2980392277 x0.03300920129 0.3019607961 x0.03784582391 0.3058823645 x0.04266935587 0.3098039329 x0.04748082906 0.3137255013 x0.05228272825 0.3176470697 x0.05707767606 0.3215686381 x0.06186828017 0.3254902065 x0.06665715575 0.3294117749 x0.0714469254 0.3333333433 x0.07624018937 0.3372549117 x0.08103957772 0.3411764801 x0.0858476907 0.3450980484 x0.09066715091 0.3490196168 x0.09550057352 0.3529411852 x0.1003505662 0.3568627536 x0.1052197516 0.360784322 x0.1101107374 0.3647058904 x0.1150261387 0.3686274588 x0.1199685708 0.3725490272 x0.1249406561 0.3764705956 x0.129944995 0.380392164 x0.1349842101 0.3843137324 x0.1400609165 0.3882353008 x0.145177722 0.3921568692 x0.1503372639 0.3960784376 x0.1555421203 0.400000006 x0.1607949287 0.4039215744 x0.1660982966 0.4078431427 x0.1714548469 0.4117647111 x0.1768671721 0.4156862795 x0.1823379248 0.4196078479 x0.1878696829 0.4235294163 x0.1934650689 0.4274509847 x0.1991267055 0.4313725531 x0.2048572153 0.4352941215 x0.210659191 0.4392156899 x0.2165352702 0.4431372583 x0.2224880457 0.4470588267 x0.2285201401 0.4509803951 x0.2346341759 0.4549019635 x0.2408327609 0.4588235319 x0.2471185029 0.4627451003 x0.2534940243 0.4666666687 x0.2599619329 0.470588237 x0.2665248513 0.4745098054 x0.2731854022 0.4784313738 x0.2799461782 0.4823529422 x0.2868098021 0.4862745106 x0.2937788963 0.490196079 x0.3008560538 0.4941176474 x0.308043927 0.4980392158 x0.3153451383 0.501960814 x0.3227622211 0.5058823824 x0.3302978575 0.5098039508 x0.3379546404 0.5137255192 x0.3457351923 0.5176470876 x0.3536416888 0.521568656 x0.3616713583 0.5254902244 x0.3698180914 0.5294117928 x0.3780757487 0.5333333611 x0.3864381909 0.5372549295 x0.3948992491 0.5411764979 x0.4034528136 0.5450980663 x0.4120927453 0.5490196347 x0.4208128452 0.5529412031 x0.4296070039 0.5568627715 x0.4384690523 0.5607843399 x0.4473928809 0.5647059083 x0.4563723207 0.5686274767 x0.4654012024 0.5725490451 x0.4744734466 0.5764706135 x0.4835828543 0.5803921819 x0.4927232862 0.5843137503 x0.5018885732 0.5882353187 x0.5110726357 0.5921568871 x0.5202693343 0.5960784554 x0.5294724107 0.6000000238 x0.5386758447 0.6039215922 x0.5478733778 0.6078431606 x0.55705899 0.611764729 x0.5662264228 0.6156862974 x0.5753695965 0.6196078658 x0.5844823122 0.6235294342 x0.5935584903 0.6274510026 x0.6025919318 0.631372571 x0.6115765572 0.6352941394 x0.6205061078 0.6392157078 x0.6293745637 0.6431372762 x0.6381756663 0.6470588446 x0.646903336 0.650980413 x0.6555514336 0.6549019814 x0.6641138196 0.6588235497 x0.6725842953 0.6627451181 x0.6809567213 0.6666666865 x0.689225018 0.6705882549 x0.6973830462 0.6745098233 x0.7054282427 0.6784313917 x0.713362813 0.6823529601 x0.7211890817 0.6862745285 x0.7289096117 0.6901960969 x0.7365267873 0.6941176653 x0.7440431118 0.6980392337 x0.7514610291 0.7019608021 x0.7587829828 0.7058823705 x0.7660114169 0.7098039389 x0.7731488347 0.7137255073 x0.7801976204 0.7176470757 x0.7871602178 0.721568644 x0.7940391898 0.7254902124 x0.8008369207 0.7294117808 x0.8075558543 0.7333333492 x0.814198494 0.7372549176 x0.8207672238 0.741176486 x0.827264607 0.7450980544 x0.8336929679 0.7490196228 x0.8400548697 0.7529411912 x0.8463526368 0.7568627596 x0.852588892 0.760784328 x0.8587659597 0.7647058964 x0.8648864031 0.7686274648 x0.8709525466 0.7725490332 x0.8769669533 0.7764706016 x0.8829320073 0.78039217 x0.8888502121 0.7843137383 x0.8947240114 0.7882353067 x0.9005557895 0.7921568751 x0.9063481092 0.7960784435 x0.9121034145 0.8000000119 x0.9178240895 0.8039215803 x0.9235126376 0.8078431487 x0.9291715026 0.8117647171 x0.9348031282 0.8156862855 x0.9404099584 0.8196078539 x0.9459944963 0.8235294223 x0.9515591264 0.8274509907 x0.9571064115 0.8313725591 x0.9626386762 0.8352941275 x0.9681584835 0.8392156959 x0.9736682177 0.8431372643 x0.979170382 0.8470588326 x0.9846673608 0.850980401 x0.9901617169 0.8549019694 x0.995655477 0.8588235378 x1.001149297 0.8627451062 x1.006643057 0.8666666746 0.870588243 x1.017630696 0.8745098114 x1.023124456 0.8784313798 0.8823529482 0.8862745166 x1.039605856 0.890196085 x1.045099616 0.8941176534 0.8980392218 0.9019607902 x1.061581016 0.9058823586 x1.067074776 0.9098039269 0.9137254953 0.9176470637 x1.083556175 0.9215686321 x1.089049935 0.9254902005 0.9294117689 0.9333333373 x1.105531335 0.9372549057 x1.111025095 0.9411764741 0.9450980425 x1.122012734 0.9490196109 x1.127506495 0.9529411793 0.9568627477 0.9607843161 x1.143987894 0.9647058845 x1.149481654 0.9686274529 0.9725490212 0.9764705896 x1.165963054 0.980392158 x1.171456814 0.9843137264 0.9882352948 0.9921568632 x1.187938213 0.9960784316 x1.193431973 1}
+   red {}
+   green {}
+   blue {}
+   alpha {}}
+ name ColorLookup20
+ selected true
+ xpos 2600
+ ypos 2390
+}
+Group {
+ name Log2Shaper6
+ label "48nits shaper acescc"
+ selected true
+ xpos 2600
+ ypos 2432
+ addUserKnob {20 log2_to_lin_tab l "log2 to lin"}
+ addUserKnob {35 presets l preset t "Presets for the exposure domain. \n\n48nits shaper small domain matches the log2 shaper used in the ACES 1.0.3 config. \n\nThe new 48nits shaper was expanded to match the acescc curve to reduce artifacts." M {"curve/48nits shaper" "knobs this \{mid_grey 0.18 min_exp -6.5 max_exp 6.5 label \"48nits shaper\"\}" "curve/48nits shaper acescc" "knobs this \{mid_grey 0.18 min_exp -7.246068811667588 max_exp 10.273931188332412 label \"48nits shaper acescc\"\}" "curve/LMT shaper" "knobs this \{mid_grey 0.18 min_exp -10 max_exp 6.5 label \"LMT shaper\"\}" "curve/108nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 8 label \"108nits shaper\"\}" "curve/1000nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 10 label \"1000nits shaper\"\}" "curve/2000nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 11 label \"2000nits shaper\"\}" "curve/4000nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 12 label \"4000nits shaper\"\}"}}
+ addUserKnob {26 ""}
+ addUserKnob {4 direction M {forward inverse}}
+ addUserKnob {7 mid_grey l "mid grey" R 0.1 0.2}
+ mid_grey 0.18
+ addUserKnob {7 min_exp l "min exp" R -12 0}
+ min_exp -12
+ addUserKnob {7 max_exp l "max exp" R 0 12}
+ max_exp 12
+}
+ Input {
+  inputs 0
+  name Input
+  xpos -40
+  ypos -10
+ }
+ Dot {
+  name Dot1
+  label " "
+  note_font "Helvetica Bold"
+  note_font_size 24
+  note_font_color 0xa5a5a501
+  xpos -6
+  ypos 42
+ }
+set N22cde4a0 [stack 0]
+ Expression {
+  expr0 "(log( r / mid_grey)/log(2) - min_exp) / (max_exp - min_exp)"
+  expr1 "(log( g / mid_grey)/log(2) - min_exp) / (max_exp - min_exp)"
+  expr2 "(log( b / mid_grey)/log(2) - min_exp) / (max_exp - min_exp)"
+  name lin_to_log2
+  xpos 70
+  ypos 86
+ }
+ Expression {
+  expr0 "isnan(r) ? color.r : r && isinf(r) ? color.r : r"
+  expr1 "isnan(g) ? color.g : g && isinf(g) ? color.g : g"
+  expr2 "isnan(b) ? color.b : b && isinf(b) ? color.b : b"
+  expr3 a
+  name nan_inf_ToColor
+  xpos 70
+  ypos 124
+  addUserKnob {20 User}
+  addUserKnob {18 color}
+  color {0 0 0}
+  addUserKnob {6 color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+push $N22cde4a0
+ Expression {
+  expr0 "pow(2, ( r * (max_exp - min_exp) + min_exp)) * mid_grey"
+  expr1 "pow(2, ( g * (max_exp - min_exp) + min_exp)) * mid_grey"
+  expr2 "pow(2, ( b * (max_exp - min_exp) + min_exp)) * mid_grey"
+  name log2_to_lin
+  xpos -150
+  ypos 86
+ }
+ Expression {
+  expr0 "isnan(r) ? color.r : r && isinf(r) ? color.r : r"
+  expr1 "isnan(g) ? color.g : g && isinf(g) ? color.g : g"
+  expr2 "isnan(b) ? color.b : b && isinf(b) ? color.b : b"
+  expr3 a
+  name nan_inf_ToColor1
+  xpos -150
+  ypos 134
+  addUserKnob {20 User}
+  addUserKnob {18 color}
+  color {0 0 0}
+  addUserKnob {6 color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Switch {
+  inputs 2
+  which {{parent.direction}}
+  name switch_direction
+  xpos -40
+  ypos 182
+ }
+ Output {
+  name Output
+  xpos -40
+  ypos 278
+ }
+end_group
+set Ne4ca820 [stack 0]
+Group {
+ name Log2Shaper7
+ label "48nits shaper acescc"
+ selected true
+ xpos 2820
+ ypos 2432
+ addUserKnob {20 log2_to_lin_tab l "log2 to lin"}
+ addUserKnob {35 presets l preset t "Presets for the exposure domain. \n\n48nits shaper small domain matches the log2 shaper used in the ACES 1.0.3 config. \n\nThe new 48nits shaper was expanded to match the acescc curve to reduce artifacts." M {"curve/48nits shaper" "knobs this \{mid_grey 0.18 min_exp -6.5 max_exp 6.5 label \"48nits shaper\"\}" "curve/48nits shaper acescc" "knobs this \{mid_grey 0.18 min_exp -7.246068811667588 max_exp 10.273931188332412 label \"48nits shaper acescc\"\}" "curve/LMT shaper" "knobs this \{mid_grey 0.18 min_exp -10 max_exp 6.5 label \"LMT shaper\"\}" "curve/108nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 8 label \"108nits shaper\"\}" "curve/1000nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 10 label \"1000nits shaper\"\}" "curve/2000nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 11 label \"2000nits shaper\"\}" "curve/4000nits shaper" "knobs this \{mid_grey 0.18 min_exp -12 max_exp 12 label \"4000nits shaper\"\}"}}
+ addUserKnob {26 ""}
+ addUserKnob {4 direction M {forward inverse}}
+ direction inverse
+ addUserKnob {7 mid_grey l "mid grey" R 0.1 0.2}
+ mid_grey 0.18
+ addUserKnob {7 min_exp l "min exp" R -12 0}
+ min_exp -12
+ addUserKnob {7 max_exp l "max exp" R 0 12}
+ max_exp 12
+}
+ Input {
+  inputs 0
+  name Input
+  xpos -40
+  ypos -10
+ }
+ Dot {
+  name Dot1
+  label " "
+  note_font "Helvetica Bold"
+  note_font_size 24
+  note_font_color 0xa5a5a501
+  xpos -6
+  ypos 42
+ }
+set Ne7dbdd60 [stack 0]
+ Expression {
+  expr0 "(log( r / mid_grey)/log(2) - min_exp) / (max_exp - min_exp)"
+  expr1 "(log( g / mid_grey)/log(2) - min_exp) / (max_exp - min_exp)"
+  expr2 "(log( b / mid_grey)/log(2) - min_exp) / (max_exp - min_exp)"
+  name lin_to_log2
+  xpos 70
+  ypos 86
+ }
+ Expression {
+  expr0 "isnan(r) ? color.r : r && isinf(r) ? color.r : r"
+  expr1 "isnan(g) ? color.g : g && isinf(g) ? color.g : g"
+  expr2 "isnan(b) ? color.b : b && isinf(b) ? color.b : b"
+  expr3 a
+  name nan_inf_ToColor
+  xpos 70
+  ypos 124
+  addUserKnob {20 User}
+  addUserKnob {18 color}
+  color {0 0 0}
+  addUserKnob {6 color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+push $Ne7dbdd60
+ Expression {
+  expr0 "pow(2, ( r * (max_exp - min_exp) + min_exp)) * mid_grey"
+  expr1 "pow(2, ( g * (max_exp - min_exp) + min_exp)) * mid_grey"
+  expr2 "pow(2, ( b * (max_exp - min_exp) + min_exp)) * mid_grey"
+  name log2_to_lin
+  xpos -150
+  ypos 86
+ }
+ Expression {
+  expr0 "isnan(r) ? color.r : r && isinf(r) ? color.r : r"
+  expr1 "isnan(g) ? color.g : g && isinf(g) ? color.g : g"
+  expr2 "isnan(b) ? color.b : b && isinf(b) ? color.b : b"
+  expr3 a
+  name nan_inf_ToColor1
+  xpos -150
+  ypos 134
+  addUserKnob {20 User}
+  addUserKnob {18 color}
+  color {0 0 0}
+  addUserKnob {6 color_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ }
+ Switch {
+  inputs 2
+  which {{parent.direction}}
+  name switch_direction
+  xpos -40
+  ypos 182
+ }
+ Output {
+  name Output
+  xpos -40
+  ypos 278
+ }
+end_group
+ColorLookup {
+ lut {master {curve C x-0.006640136242 -0.3871673346 x0.1459600329 -0.1703355312 x0.3084508777 0.04100656509 x0.5189825892 0.3484135866 x0.6729955673 0.6942463517 x0.8552680612 0.9906745553}
+   red {}
+   green {}
+   blue {}
+   alpha {}}
+ name ColorLookup21
+ selected true
+ xpos 2820
+ ypos 2486
+}
+Grade {
+ gamma 0.5555555556
+ name Grade11
+ selected true
+ xpos 2820
+ ypos 2534
+}
+push $Ne4ca820
+Write {
+ channels {rgba.red -rgba.green -rgba.blue}
+ file ./shaper_substance_painter_log_to_linear.tiff
+ file_type tiff
+ datatype "32 bit float"
+ checkHashOnRead false
+ version 2
+ name Write7
+ selected true
+ xpos 2600
+ ypos 2570
+}

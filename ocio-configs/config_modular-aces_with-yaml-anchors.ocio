@@ -1,0 +1,1351 @@
+ocio_profile_version: 1
+
+search_path: ${SITE_ROOT}/${SHOW}/shots/${SEQUENCE}/${SHOT}/luts:luts
+strictparsing: true
+luma: [0.2126, 0.7152, 0.0722]
+
+description: |
+  A minimalist modular ACES ocio config.
+  All matrices are defined as YAML Anchors using &mtx_name, and referenced later in the config using *mtx_name.
+  To avoid duplication, allocationvars are defined using anchors and referenced later using YAML Merge Keys ( <<: *reference )
+
+
+roles:
+  color_picking: work_lin
+  compositing_linear: work_lin
+  compositing_log: work_log
+  data: raw
+  default: aces
+  scene_linear: work_lin
+  matte_paint: work_dmp
+  texture_paint: work_lin
+  proxy: aces_tonescale_200nits
+
+
+displays:
+  bt709:
+    - !<View> {name: grade, colorspace: view_grade}
+    - !<View> {name: balance, colorspace: view_balance}
+    - !<View> {name: show, colorspace: view_show}
+    - !<View> {name: log, colorspace: view_log}
+    - !<View> {name: raw, colorspace: raw}
+
+
+active_displays: [bt709]
+active_views: [grade, balance, show, log, raw]
+
+
+
+
+
+
+
+
+colorspaces:
+  
+  # Anchors - Variables to be referenced in the config
+  #---------------------------------------------------------------------------------#
+
+
+  # Matrices
+  # --------------------------------------------------------------------------------#
+
+  # Colorspace Chromaticity / Gamut Conversion to Reference (CAT02 Chromatic Adaptation if Whitepoints are Different)
+  - &mtx_xyz_to_ap0 [1.04981101, 0.00000000, -0.00009748, 0, -0.49590302, 1.37331307, 0.09824004, 0, 0.00000004, -0.00000000, 0.99125201, 0, 0, 0, 0, 1]
+  - &mtx_ap1_to_ap0 [0.69545221, 0.14067869, 0.16386907, 0, 0.04479461, 0.85967112, 0.09553432, 0, -0.00552587, 0.00402522, 1.00150073, 0, 0, 0, 0, 1]
+
+  - &mtx_sgamut3_to_ap0 [0.75298262, 0.14337018, 0.10364717, 0, 0.02170774, 1.01531911, -0.03702657, 0, -0.00941604, 0.00337040, 1.00604558, 0, 0, 0, 0, 1]
+  - &mtx_sgamut3-day_to_ap0 [0.876446, 0.0145412, 0.109013, 0, 0.0774075, 0.952957, -0.0303647, 0, 0.0573564, -0.115107, 1.05775, 0, 0, 0, 0, 1]
+  - &mtx_sgamut3-tung_to_ap0 [1.01102, -0.136253, 0.125229, 0, 0.101199, 0.95622, -0.0574191, 0, 0.0600767, -0.101019, 1.04094, 0, 0, 0, 0, 1]
+  - &mtx_sgamut3cine_to_ap0 [0.63878870, 0.27235135, 0.08885989, 0, -0.00391586, 1.08807349, -0.08415736, 0, -0.02990716, -0.02643257, 1.05633974, 0, 0, 0, 0, 1]
+  - &mtx_venice-sgamut3_to_ap0 [0.79333, 0.0890786, 0.117592, 0, 0.0155811, 1.03271, -0.0482934, 0, -0.0188647, 0.0127694, 1.0061, 0, 0, 0, 0, 1]
+  - &mtx_venice-sgamut3cine_to_ap0 [0.674257, 0.220572, 0.105171, 0, -0.00931361, 1.10596, -0.0966453, 0, -0.0382091, -0.0179384, 1.05615, 0, 0, 0, 0, 1]
+  - &mtx_alexawg_to_ap0 [0.73476535, 0.15553665, 0.10969799, 0, 0.09226618, 0.67018014, 0.23755382, 0, 0.00222149, -0.04120818, 1.03898656, 0, 0, 0, 0, 1]
+  - &mtx_redwg_to_ap0 [0.78486896, 0.08576044, 0.12937061, 0, 0.02270968, 1.09055710, -0.11326653, 0, -0.07380762, -0.32026902, 1.39407659, 0, 0, 0, 0, 1]
+  - &mtx_vgamut_to_ap0 [0.72437793, 0.16829555, 0.10732652, 0, 0.02088307, 0.98686528, -0.00774817, 0, -0.00905834, -0.00509586, 1.01415408, 0, 0, 0, 0, 1]
+  - &mtx_protune_to_ap0 [0.53344852, 0.32413912, 0.14241238, 0, -0.05072996, 1.07572067, -0.02499051, 0, 0.07141964, -0.29052189, 1.21910226, 0, 0, 0, 0, 1]
+  - &mtx_cgamut-day_to_ap0 [0.76306456, 0.14902112, 0.08791436, 0, 0.00365748, 1.10696065, -0.11061791, 0, -0.00940778, -0.21838327, 1.22779095, 0, 0, 0, 0, 1]
+  - &mtx_cgamut-tung_to_ap0 [0.817416, 0.0907557, 0.091828, 0, -0.0353614, 1.06569, -0.0303292, 0, 0.0103904, -0.299271, 1.28888, 0, 0, 0, 0, 1]
+
+  - &mtx_p3d60_to_ap0 [0.53010160, 0.27786112, 0.19203725, 0, 0.07592519, 0.81960624, 0.10446860, 0, 0.00000002, 0.04455275, 0.95544720, 0, 0, 0, 0, 1]
+  - &mtx_p3d65_to_ap0 [0.51884151, 0.28730032, 0.19385816, 0, 0.07361169, 0.82129973, 0.10508882, 0, -0.00040037, 0.04067384, 0.95972645, 0, 0, 0, 0, 1]
+  - &mtx_p3dci_to_ap0 [0.48521525, 0.32400581, 0.19077893, 0, 0.06690042, 0.82933831, 0.10376146, 0, 0.00010186, 0.04991445, 0.94998360, 0, 0, 0, 0, 1]
+  - &mtx_bt2020_to_ap0 [0.67889118, 0.15886839, 0.16224040, 0, 0.04557089, 0.86071301, 0.09371640, 0, -0.00048569, 0.02506020, 0.97542542, 0, 0, 0, 0, 1]
+  - &mtx_bt709_to_ap0 [0.43957570, 0.38391256, 0.17651173, 0, 0.08960043, 0.81471437, 0.09568546, 0, 0.01741550, 0.10873430, 0.87385011, 0, 0, 0, 0, 1]
+
+  # Display gamut to CIEXYZ (No chromatic adaptation)
+  - &mtx_ap1_to_xyz [0.66245419, 0.13400421, 0.15618770, 0, 0.27222875, 0.67408174, 0.05368952, 0, -0.00557466, 0.00406074, 1.01033914, 0, 0, 0, 0, 1]
+  - &mtx_p3d60_to_xyz [0.50494957, 0.26468146, 0.18301505, 0, 0.23762332, 0.68917066, 0.07320601, 0, 0.00000000, 0.04494593, 0.96387923, 0, 0, 0, 0, 1]
+  - &mtx_p3d65_to_xyz [0.48657098, 0.26566768, 0.19821729, 0, 0.22897457, 0.69173855, 0.07928691, 0, 0.00000000, 0.04511340, 1.04394436, 0, 0, 0, 0, 1]
+  - &mtx_p3dci_to_xyz [0.44516984, 0.27713439, 0.17228265, 0, 0.20949169, 0.72159529, 0.06891306, 0, 0.00000000, 0.04706058, 0.90735531, 0, 0, 0, 0, 1]
+  - &mtx_bt2020_to_xyz [0.63695806, 0.14461690, 0.16888097, 0, 0.26270023, 0.67799807, 0.05930172, 0, 0.00000000, 0.02807270, 1.06098509, 0, 0, 0, 0, 1]
+  - &mtx_bt709_to_xyz [0.41239080, 0.35758433, 0.18048081, 0, 0.21263902, 0.71516865, 0.07219232, 0, 0.01933082, 0.11919473, 0.95053220, 0, 0, 0, 0, 1]
+ 
+  # Utilities
+  - &mtx_cat_d60_to_d65_bradford [0.98722541, -0.00611481, 0.01592641, 0, -0.00760388, 1.00187480, 0.00532203, 0, 0.00306604, -0.00508424, 1.08151925, 0, 0, 0, 0, 1]
+  - &mtx_cat_d60_to_d50_bradford [1.03413868, 0.01679790, -0.03742383, 0, 0.02161085, 0.99222952, -0.01270486, 0, -0.00692726, 0.01130731, 0.81330264, 0, 0, 0, 0, 1]
+  - &mtx_cat_d60_to_d65_cat02 [0.98824048, -0.00789157, 0.01672901, 0, -0.00569724, 0.99870765, 0.00666113, 0, 0.00035284, 0.00112166, 1.07792985, 0, 0, 0, 0, 1]
+  - &mtx_aces_rrt_desat [0.97088915, 0.02696327, 0.00214758, 0, 0.01088915, 0.98696327, 0.00214758, 0, 0.01088915, 0.02696327, 0.96214759, 0, 0, 0, 0, 1]
+  - &mtx_aces_odt_desat [0.94905603, 0.04718572, 0.00375827, 0, 0.01905601, 0.97718573, 0.00375827, 0, 0.01905601, 0.04718572, 0.93375826, 0, 0, 0, 0, 1]
+
+  # Move blue primary to reduce saturation. Handles negative out of gamut values in acescg
+  # https://acescentral.com/t/colour-artefacts-or-breakup-using-aces/520/6
+  - &mtx_desat_blue_primary [0.940437, -0.0183069, 0.0778696, 0, 0.0083787, 0.82866, 0.162961, 0, 0.000547126, -0.000883375, 1.00034, 0, 0, 0, 0, 1]
+
+
+  # Colorspace defaults
+  - &defaults 
+    equalitygroup: ""
+    bitdepth: 32f
+    isdata: false
+
+  - &defaults-log-alloc
+    <<: *defaults
+    allocation: lg2
+    allocationvars: [-8, 5, 0.00390625]
+  
+  - &defaults-uniform-alloc
+    <<: *defaults
+    allocation: uniform
+    allocationvars: [0, 1]
+
+  - &defaults-tonescale-alloc
+    <<: *defaults
+    allocation: uniform
+    allocationvars: [0, 1.1]
+
+
+
+
+  # Colorspaces
+  # --------------------------------------------------------------------------------#
+
+  - !<ColorSpace>
+    name: raw
+    family: utility
+    description: The reference colorspace.
+    <<: *defaults-uniform-alloc
+    isdata: true
+ 
+
+  # Gamut Colorspaces
+  # ------------------
+  
+  # Working Gamuts / Chromaticities
+  - !<ColorSpace>
+    name: ap0
+    family: input/gamut
+    <<: *defaults-log-alloc
+
+  - !<ColorSpace>
+    name: ap1
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_ap1_to_ap0}
+
+
+  # Camera Gamuts / Chromaticities
+  - !<ColorSpace>
+    name: alexawg
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_alexawg_to_ap0}
+
+  - !<ColorSpace>
+    name: redwg
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_redwg_to_ap0}
+
+  - !<ColorSpace>
+    name: protune
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_protune_to_ap0}
+
+  - !<ColorSpace>
+    name: sgamut3
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_sgamut3_to_ap0}
+
+  - !<ColorSpace>
+    name: sgamut3-day
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_sgamut3-day_to_ap0}
+
+  - !<ColorSpace>
+    name: sgamut3-tung
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_sgamut3-tung_to_ap0}
+
+  - !<ColorSpace>
+    name: sgamut3cine
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_sgamut3cine_to_ap0}
+
+  - !<ColorSpace>
+    name: venice-sgamut3
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_venice-sgamut3_to_ap0}
+
+  - !<ColorSpace>
+    name: venice-sgamut3cine
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_venice-sgamut3cine_to_ap0}
+
+  - !<ColorSpace>
+    name: vgamut
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_vgamut_to_ap0}
+
+  - !<ColorSpace>
+    name: cgamut-day
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_cgamut-day_to_ap0}
+
+  - !<ColorSpace>
+    name: cgamut-tung
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_cgamut-tung_to_ap0}
+
+
+  # Display Gamuts / Chromaticities
+  - !<ColorSpace>
+    name: bt2020
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_bt2020_to_ap0}
+
+  - !<ColorSpace>
+    name: bt709
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_bt709_to_ap0}
+
+  - !<ColorSpace>
+    name: p3d60
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_p3d60_to_ap0}
+
+  - !<ColorSpace>
+    name: p3d65
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_p3d65_to_ap0}
+
+  - !<ColorSpace>
+    name: p3dci
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_p3dci_to_ap0}
+
+  - !<ColorSpace>
+    name: xyz
+    family: input/gamut
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_xyz_to_ap0}
+
+
+
+
+  # Transfer Function Colorspaces
+  # --------------------------------------------------------------------------------#
+  - !<ColorSpace>
+    name: log_acescc
+    family: input/curve
+    <<: *defaults
+    allocation: uniform
+    allocationvars: [-0.3584, 1.468]
+    to_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescc_to_linear.spi1d, interpolation: linear}
+
+  - !<ColorSpace>
+    name: log_acescct
+    family: input/curve
+    <<: *defaults
+    allocation: uniform
+    allocationvars: [-0.249136, 1.468]
+    to_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear}
+
+  - !<ColorSpace>
+    name: log_acesproxy
+    family: input/curve
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acesproxy_to_linear.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: logc
+    family: input/curve
+    description: Arri V3 LogC EI 800 
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_logc-ei800_to_linear.spi1d, interpolation: linear}
+    
+  - !<ColorSpace>
+    name: log3g10
+    family: input/curve
+    description: Red Log3g10
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_log3g10_to_linear.spi1d, interpolation: linear}
+    
+  - !<ColorSpace>
+    name: protuneflat
+    family: input/curve
+    description: GoPro Protune Flat log
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_protuneflat_to_linear.spi1d, interpolation: linear}
+
+  - !<ColorSpace>
+    name: slog1
+    family: input/curve
+    description: Sony S-Log1
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_slog1_to_linear.spi1d, interpolation: linear}
+  
+  - !<ColorSpace>
+    name: slog2
+    family: input/curve
+    description: Sony S-Log2
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_slog2_to_linear.spi1d, interpolation: linear}
+  
+  - !<ColorSpace>
+    name: slog3
+    family: input/curve
+    description: Sony S-Log3
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_slog3_to_linear.spi1d, interpolation: linear}
+    
+  - !<ColorSpace>
+    name: vlog
+    family: input/curve
+    description: Panasonic V-Log
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_vlog_to_linear.spi1d, interpolation: linear}
+    
+  - !<ColorSpace>
+    name: clog
+    family: input/curve
+    description: Canon Log
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_clog_to_linear.spi1d, interpolation: linear}    
+  
+  - !<ColorSpace>
+    name: clog2
+    family: input/curve
+    description: Canon Log2
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_clog2_to_linear.spi1d, interpolation: linear}    
+  
+  - !<ColorSpace>
+    name: clog3
+    family: input/curve
+    description: Canon Log3
+    <<: *defaults-uniform-alloc
+    to_reference: !<FileTransform> {src: crv_clog3_to_linear.spi1d, interpolation: linear}
+
+      
+
+
+  # Input Device Transform Colorspaces
+  # --------------------------------------------------------------------------------#
+  - !<ColorSpace>
+    name: alexa_logc-wg
+    family: input
+    description: Alexa Wide Gamut V3 LogC
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: logc, dst: aces}
+        - !<ColorSpaceTransform> {src: alexawg, dst: aces}
+
+  - !<ColorSpace>
+    name: red_log3g10-wg
+    family: input
+    description: Red IPP2 Primaries and transfer function - RedWideGamutRGB + RedLog3G10
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: log3g10, dst: aces}
+        - !<ColorSpaceTransform> {src: redwg, dst: aces}
+
+  - !<ColorSpace>
+    name: gopro_protune
+    family: input
+    description: GoPro Protune Flat with Protune primaries.
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: protuneflat, dst: aces}
+        - !<ColorSpaceTransform> {src: protune, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_slog1-sgamut3
+    family: input
+    description: Sony - S-Log1 - S-Gamut / S-Gamut3
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog1, dst: aces}
+        - !<ColorSpaceTransform> {src: sgamut3, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_slog2-sgamut3
+    family: input
+    description: Sony - S-Log2 - S-Gamut / S-Gamut3
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog2, dst: aces}
+        - !<ColorSpaceTransform> {src: sgamut3, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_slog2-sgamut-day
+    family: input
+    description: Sony - S-Log2 - S-Gamut / S-Gamut3 - Daylight
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog2, dst: aces}
+        - !<ColorSpaceTransform> {src: sgamut3-day, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_slog2-sgamut-tung
+    family: input
+    description: Sony - S-Log2 - S-Gamut / S-Gamut3 - Tungsten
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog2, dst: aces}
+        - !<ColorSpaceTransform> {src: sgamut3-tung, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_slog3-sgamut3
+    family: input
+    description: Sony - S-Log3 - S-Gamut / S-Gamut3 - Tungsten
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog3, dst: aces}
+        - !<ColorSpaceTransform> {src: sgamut3, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_slog3-sgamut3cine
+    family: input
+    description: Sony - S-Log3 - S-Gamut3.Cine
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog3, dst: aces}
+        - !<ColorSpaceTransform> {src: sgamut3cine, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_venice_slog3-sgamut3
+    family: input
+    description: Sony - S-Log3 - S-Gamut3.Cine
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog3, dst: aces}
+        - !<ColorSpaceTransform> {src: venice-sgamut3, dst: aces}
+
+  - !<ColorSpace>
+    name: sony_venice_slog3-sgamut3cine
+    family: input
+    description: Sony - S-Log3 - S-Gamut3.Cine
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: slog3, dst: aces}
+        - !<ColorSpaceTransform> {src: venice-sgamut3cine, dst: aces}
+
+  - !<ColorSpace>
+    name: panasonic_vlog-vgamut
+    family: input
+    description: Panasonic - V-Log - V-Gamut
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: vlog, dst: aces}
+        - !<ColorSpaceTransform> {src: vgamut, dst: aces}
+
+  - !<ColorSpace>
+    name: canon_clog3-cgamut-day
+    family: input
+    description: Canon - Canon-Log3 - Cinema Gamut - Daylight
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: clog, dst: aces}
+        - !<ColorSpaceTransform> {src: cgamut-day, dst: aces}
+
+  - !<ColorSpace>
+    name: canon_clog3-cgamut-tung
+    family: input
+    description: Canon - Canon-Log3 - Cinema Gamut - Tungsten
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: clog, dst: aces}
+        - !<ColorSpaceTransform> {src: cgamut-day, dst: aces}
+
+  - !<ColorSpace>
+    name: adx10
+    family: input
+    <<: *defaults-uniform-alloc
+    bitdepth: 10ui
+    description: ADX10 color space - used for film scans
+    to_reference: !<GroupTransform>
+      children:
+        - !<MatrixTransform> {matrix: [2.046, 0, 0, 0, 0, 2.046, 0, 0, 0, 0, 2.046, 0, 0, 0, 0, 1], offset: [-0.19, -0.19, -0.19, 0]}
+        - !<MatrixTransform> {matrix: [0.75573, 0.22197, 0.0223, 0, 0.05901, 0.96928, -0.02829, 0, 0.16134, 0.07406, 0.7646, 0, 0, 0, 0, 1]}
+        - !<FileTransform> {src: crv_adx_cid_to_rle.spi1d, interpolation: linear}
+        - !<LogTransform> {base: 10, direction: inverse}
+        - !<MatrixTransform> {matrix: [0.72286, 0.1263, 0.15084, 0, 0.11923, 0.76418, 0.11659, 0, 0.01427, 0.08213, 0.90359, 0, 0, 0, 0, 1]}
+
+  - !<ColorSpace>
+    name: adx16
+    family: input
+    <<: *defaults-uniform-alloc
+    bitdepth: 16ui
+    description: ADX16 color space - used for film scans
+    to_reference: !<GroupTransform>
+      children:
+        - !<MatrixTransform> {matrix: [8.19188, 0, 0, 0, 0, 8.19188, 0, 0, 0, 0, 8.19188, 0, 0, 0, 0, 1], offset: [-0.19, -0.19, -0.19, 0]}
+        - !<MatrixTransform> {matrix: [0.75573, 0.22197, 0.0223, 0, 0.05901, 0.96928, -0.02829, 0, 0.16134, 0.07406, 0.7646, 0, 0, 0, 0, 1]}
+        - !<FileTransform> {src: crv_adx_cid_to_rle.spi1d, interpolation: linear}
+        - !<LogTransform> {base: 10, direction: inverse}
+        - !<MatrixTransform> {matrix: [0.72286, 0.1263, 0.15084, 0, 0.11923, 0.76418, 0.11659, 0, 0.01427, 0.08213, 0.90359, 0, 0, 0, 0, 1]}
+
+  - !<ColorSpace>
+    name: bt709_gamma_2.2
+    family: input
+    description: Utility input transform - Generic BT.709 gamut gamma 2.2 transfer function texture image IDT.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: bt709}
+        - !<ExponentTransform> {value: [2.2, 2.2, 2.2, 1], direction: inverse}
+
+  - !<ColorSpace>
+    name: bt709_gamma_1.8
+    family: input
+    description: Utility input transform - Generic BT.709 gamut gamma 1.8 transfer function texture image IDT.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: bt709}
+        - !<ExponentTransform> {value: [1.8, 1.8, 1.8, 1], direction: inverse}
+
+  - !<ColorSpace>
+    name: bt709_srgb
+    family: input
+    description: Utility input transform - Generic BT.709 gamut sRGB transfer function texture image IDT.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: bt709}
+        - !<FileTransform> {src: eotf_linear_to_sRGB.spi1d, interpolation: linear}
+
+
+
+
+  # ACES Working Colorspaces
+  # --------------------------------------------------------------------------------#
+
+
+  - !<ColorSpace>
+    name: aces
+    family: aces
+    description: ACES 2065-1 - scene linear, ap0 primaries
+    <<: *defaults-log-alloc
+    allocation: lg2
+    allocationvars: [-8, 5, 0.00390625]
+
+  - !<ColorSpace>
+    name: acescg
+    family: aces
+    <<: *defaults-log-alloc
+    to_reference: !<ColorSpaceTransform> {src: ap1, dst: ap0}
+
+  - !<ColorSpace>
+    name: acescc
+    family: aces
+    <<: *defaults
+    allocation: uniform
+    allocationvars: [-0.3584, 1.468]
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: log_acescc, dst: aces}
+        - !<ColorSpaceTransform> {src: ap1, dst: ap0}
+
+  - !<ColorSpace>
+    name: acescct
+    family: aces
+    <<: *defaults
+    allocation: uniform
+    allocationvars: [-0.249136, 1.468]
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: log_acescct, dst: aces}
+        - !<ColorSpaceTransform> {src: ap1, dst: ap0}
+
+  - !<ColorSpace>
+    name: acesproxy
+    family: aces
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: log_acesproxy, dst: aces}
+        - !<ColorSpaceTransform> {src: ap1, dst: ap0}
+
+
+  
+
+
+
+
+  # ACES View Transform Utility Colorspaces
+  # --------------------------------------------------------------------------------#
+  
+
+  # Look Modification Transforms
+  - !<ColorSpace>
+    name: lmt_aces_rrt_sweeteners
+    family: utility/lmt
+    description: ACES default LMT, "rrt_sweeteners". Input AP0, output AP1
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<MatrixTransform> {matrix: *mtx_aces_rrt_desat, direction: inverse}
+        - !<ColorSpaceTransform> {src: ap1, dst: ap0}
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: lmt_inv_aces_default_acescct.spi3d, interpolation: tetrahedral}
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: forward}
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: lmt_aces_default_acescct.spi3d, interpolation: tetrahedral}
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: forward}
+        - !<ColorSpaceTransform> {src: ap0, dst: ap1}
+        - !<MatrixTransform> {matrix: *mtx_aces_rrt_desat, direction: forward}
+
+
+  - !<ColorSpace>
+    name: lmt_filmish
+    family: utility/lmt
+    description: A custom look modification transform (LMT) inspired by film luts. Designed to work in ACEScct AP1 gamut. Returns ACEScg.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: acescct}
+        - !<FileTransform> {src: lmt_filmish_acescct.spi3d, interpolation: tetrahedral}
+        - !<ColorSpaceTransform> {src: acescct, dst: acescg}
+
+
+  - !<ColorSpace>
+    name: lmt_desat_blue_primary
+    family: utility/lmt
+    description: The "blue light fix" ACES LMT to fix negative values of highly saturated blue lights on cameras like the Arri Alexa
+    <<: *defaults-log-alloc
+    to_reference: !<MatrixTransform> {matrix: *mtx_desat_blue_primary, direction: forward}
+
+
+  # ACES Tonescales - aka Tonemapping
+  - !<ColorSpace>
+    name: aces_tonescale_48nits
+    family: aces/tonescale
+    description: ACES tonescale for SDR view transforms.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_48nits_to_linearcv.spi1d, interpolation: linear, direction: forward}
+
+
+  - !<ColorSpace>
+    name: aces_tonescale_48nits-ssts
+    family: aces/tonescale
+    description: ACES tonescale for SDR view transforms - Using the ACES SSTS algorithm instead of the old c5-c9 tonescale. 
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_48nits-ssts_to_linearcv.spi1d, interpolation: linear, direction: forward}
+
+
+  - !<ColorSpace>
+    name: aces_tonescale_108nits
+    family: aces/tonescale
+    description: ACES HDR tonescale - 0.0001 7.2 108 / Dolby Cinema
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_108nits_to_linearcv.spi1d, interpolation: linear, direction: forward}
+
+
+  - !<ColorSpace>
+    name: aces_tonescale_1000nits
+    family: aces/tonescale
+    description: ACES HDR tonescale - 0.0001 15 1000
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_1000nits_to_linearcv.spi1d, interpolation: linear, direction: forward}
+
+
+  - !<ColorSpace>
+    name: aces_tonescale_2000nits
+    family: aces/tonescale
+    description: ACES HDR tonescale - 0.0001 15 2000
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_2000nits_to_linearcv.spi1d, interpolation: linear, direction: forward}
+
+
+  - !<ColorSpace>
+    name: aces_tonescale_4000nits
+    family: aces/tonescale
+    description: ACES HDR tonescale - 0.0001 15 4000
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_4000nits_to_linearcv.spi1d, interpolation: linear, direction: forward}
+
+
+
+  # Utility Tonescales
+  - !<ColorSpace>
+    name: aces_tonescale_hlg
+    family: aces/tonescale
+    description: Tonescale from linear to HLG without lattice interpolation. 1dlut only.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_1000nits_to_hlg.spi1d, interpolation: linear, direction: forward}
+
+
+  - !<ColorSpace>
+    name: aces_tonescale_200nits
+    family: aces/tonescale
+    description: Tonescale from linear to ACES SSTS 200nits max / 4.8nits mid - gamma 2.6 EOTF. Useful as an hdr display-referred wide gamut working colorspace.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: crv_acescct_to_linear.spi1d, interpolation: linear, direction: inverse}
+        - !<FileTransform> {src: ts_acescct_200nits_to_gamma26.spi1d, interpolation: linear, direction: forward}
+
+
+  # Gamut Limit colorspaces. Always apply from CIE-XYZ
+  - !<ColorSpace>
+    name: gamut_lim_rec709
+    family: utility
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: xyz, dst: bt709}
+        - !<FileTransform> {src: util_clamp.spi3d, interpolation: tetrahedral, direction: forward}
+        - !<ColorSpaceTransform> {src: bt709, dst: xyz}
+    
+
+  - !<ColorSpace>
+    name: gamut_lim_p3d65
+    family: utility
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: xyz, dst: p3d65}
+        - !<FileTransform> {src: util_clamp.spi3d, interpolation: tetrahedral, direction: forward}
+        - !<ColorSpaceTransform> {src: p3d65, dst: xyz}
+
+
+  - !<ColorSpace>
+    name: gamut_lim_p3d60
+    family: utility
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: xyz, dst: p3d60}
+        - !<FileTransform> {src: util_clamp.spi3d, interpolation: tetrahedral, direction: forward}
+        - !<ColorSpaceTransform> {src: p3d60, dst: xyz}
+    
+
+  # Role Colorspaces
+  # --------------------------------------------------------------------------------#
+
+
+
+
+
+  # ACES View Transforms - SDR
+  # --------------------------------------------------------------------------------#
+
+  - !<ColorSpace>
+    name: aces_view_rec709
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt709_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_bt1886.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec709_d60sim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<CDLTransform> {slope: [0.96362, 0.96362, 0.96362]}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_bt709_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_bt1886.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_srgb
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt709_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_srgb.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_srgb_d60sim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<CDLTransform> {slope: [0.96362, 0.96362, 0.96362]}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_bt709_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_srgb.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec2020
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt2020_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_bt1886.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec2020_rec709lim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<ColorSpaceTransform> {src: aces, dst: gamut_lim_rec709}
+        - !<MatrixTransform> {matrix: *mtx_bt2020_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_bt1886.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec2020_p3d65lim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<ColorSpaceTransform> {src: aces, dst: gamut_lim_p3d65}
+        - !<MatrixTransform> {matrix: *mtx_bt2020_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_bt1886.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3d60
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_p3d60_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_gamma26.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3d65
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_p3d65_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_gamma26.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3d65_d60sim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_p3d65_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_gamma26.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3dci_d60sim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<FileTransform> {src: util_aces_roll_white_fwd.spi1d, interpolation: linear}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_p3dci_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_gamma26.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3dci_d65sim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<FileTransform> {src: util_aces_roll_white_fwd.spi1d, interpolation: linear}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_p3dci_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_gamma26.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_dcdm
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_dcdm.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_dcdm_p3d60lim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ColorSpaceTransform> {src: aces, dst: gamut_lim_p3d60}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_dcdm.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_dcdm_p3d65lim
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ColorSpaceTransform> {src: aces, dst: gamut_lim_p3d65}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_dcdm.spi1d, interpolation: linear}
+
+
+
+
+  # ACES View Transforms - HDR
+  # --------------------------------------------------------------------------------#
+
+  - !<ColorSpace>
+    name: aces_view_p3d65_st2084-108nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_108nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_p3d65_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_st2084-108nits.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3d65_st2084-1000nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_1000nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_p3d65_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_st2084-1000nits.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3d65_st2084-2000nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_2000nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_p3d65_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_st2084-2000nits.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_p3d65_st2084-4000nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_4000nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_p3d65_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_st2084-4000nits.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec2020_hlg-1000nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: eotf_inv_hlg_to_st2084-1000nits.spi3d, interpolation: tetrahedral}
+        - !<ColorSpaceTransform> {src: aces_view_rec2020_st2084-1000nits, dst: aces}
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: aces_view_rec2020_st2084-1000nits}
+        - !<FileTransform> {src: eotf_st2084-1000nits_to_hlg.spi3d, interpolation: tetrahedral}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec2020_st2084-1000nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_1000nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt2020_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_st2084-1000nits.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec2020_st2084-2000nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_2000nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt2020_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_st2084-2000nits.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: aces_view_rec2020_st2084-4000nits
+    family: view/aces
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_aces_rrt_sweeteners}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_4000nits}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt2020_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_st2084-4000nits.spi1d, interpolation: linear}
+
+
+
+
+
+
+
+
+
+
+  # Other View Transforms
+  # --------------------------------------------------------------------------------#
+
+  - !<ColorSpace>
+    name: view_filmish_rec709
+    family: view
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_filmish}
+        - !<MatrixTransform> {matrix: *mtx_aces_rrt_desat, direction: forward}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits-ssts}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d65_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt709_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_bt1886.spi1d, interpolation: linear}
+
+
+  - !<ColorSpace>
+    name: view_filmish_rec709_d50sim
+    family: view
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: lmt_filmish}
+        - !<MatrixTransform> {matrix: *mtx_aces_rrt_desat, direction: forward}
+        - !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_48nits-ssts}
+        - !<MatrixTransform> {matrix: *mtx_aces_odt_desat, direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_ap1_to_xyz, direction: forward}
+        - !<ExponentTransform> {value: [0.9811, 0.9811, 0.9811, 1], direction: forward}
+        - !<MatrixTransform> {matrix: *mtx_cat_d60_to_d50_bradford}
+        - !<MatrixTransform> {matrix: *mtx_bt709_to_xyz, direction: inverse}
+        - !<FileTransform> {src: shaper_linearcv_to_gamma40.spi1d, interpolation: linear}
+        - !<FileTransform> {src: eotf_shaper_gamma40_to_bt1886.spi1d, interpolation: linear}
+
+
+
+
+
+
+
+
+
+
+  # Show Configuration Colorspaces
+  # --------------------------------------------------------------------------------#
+
+  - !<ColorSpace>
+    name: work_lin
+    family: show
+    description: |
+      work_lin: The working scene-linear colorspace.
+    <<: *defaults-log-alloc
+    to_reference: !<ColorSpaceTransform> {src: acescg, dst: aces}
+
+  - !<ColorSpace>
+    name: work_log
+    family: show
+    description: |
+      work_log: The working log colorspace.
+    <<: *defaults-log-alloc
+    to_reference: !<ColorSpaceTransform> {src: acescct, dst: aces}
+
+  - !<ColorSpace>
+    name: work_dmp
+    family: show
+    description: |
+      work_dmp: uint16 display-referred hdr wide gamut working colorspace for digital matte painting.
+    bitdepth: 16ui
+    <<: *defaults-uniform-alloc
+    from_reference: !<ColorSpaceTransform> {src: aces, dst: aces_tonescale_200nits}
+
+  - !<ColorSpace>
+    name: src_lin
+    family: show
+    description: |
+      src_lin: The external source image scene-linear colorspace.
+    <<: *defaults-log-alloc
+    to_reference: !<ColorSpaceTransform> {src: alexawg, dst: aces}
+
+  - !<ColorSpace>
+    name: src_log
+    family: show
+    description: |
+      src_log: The external source image log colorspace.
+    <<: *defaults-uniform-alloc
+    to_reference: !<ColorSpaceTransform> {src: alexa_logc-wg, dst: aces}
+
+
+  - !<ColorSpace>
+    name: balance
+    family: show/grade
+    description: |
+      balance: The per-shot internal balance grade. Applied in work_lin.
+    <<: *defaults-uniform-alloc
+    to_reference: !<GroupTransform>
+      children:
+        - !<FileTransform> {src: balance.cc}
+        - !<FileTransform> {src: balance.spimtx}
+        - !<ColorSpaceTransform> {src: work_lin, dst: aces}
+        
+
+  - !<ColorSpace>
+    name: shot_grade
+    family: show/grade
+    description: |
+      shot_grade: The external source DI shot grade.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: work_lin}
+        - !<ColorSpaceTransform> {src: work_lin, dst: src_log}
+        - !<FileTransform> {src: shot_grade.cc}
+        - !<ColorSpaceTransform> {src: src_log, dst: work_lin}
+
+
+  - !<ColorSpace>
+    name: shot_grade_internal
+    family: show/grade
+    description: |
+      shot_grade_internal: The internal shot grade.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: work_lin}
+        - !<ColorSpaceTransform> {src: work_lin, dst: work_log}
+        - !<FileTransform> {src: shot_grade_internal.cc}
+        - !<ColorSpaceTransform> {src: work_log, dst: work_lin}
+
+
+
+
+  # Show View Transforms
+  # ---------------------------
+
+  - !<ColorSpace>
+    name: view_show
+    family: show/view
+    description: |
+      view_show: The show view transform.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: view_filmish_rec709}
+
+  - !<ColorSpace>
+    name: view_log
+    family: show/view
+    description: |
+      view_log: The show log transform.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: work_log}
+
+  - !<ColorSpace>
+    name: view_grade
+    family: show/view
+    description: |
+      view_shotgrade: The shot di grade view transform. Balance grade inverted if there is one.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: balance}
+        - !<ColorSpaceTransform> {src: work_lin, dst: shot_grade}
+        - !<ColorSpaceTransform> {src: work_lin, dst: view_show}
+
+  - !<ColorSpace>
+    name: view_balance
+    family: show/view
+    description: |
+      view_balance: The balance view transform: work_lin -> shot_grade_internal -> view_show.
+    <<: *defaults-uniform-alloc
+    from_reference: !<GroupTransform>
+      children:
+        - !<ColorSpaceTransform> {src: aces, dst: shot_grade_internal}
+        - !<ColorSpaceTransform> {src: work_lin, dst: view_show}
