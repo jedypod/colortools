@@ -7,4 +7,4 @@ Custom OpenColorIO configs created for fun and distributed for learning. These c
 - [ocio-configs](/ocio-configs) : OCIO Configs.
 - [lut-creation](/lut-creation) : source scripts and information about the creation of the various included color transforms.
 - [images](/images) : screenshots for demonstration.
-- [substance-painter_aces] : colorluts (exr images that encode a color transform) for using ACES in Substance Painter.
+- [substance-painter_aces](/substance-painter_aces) : colorluts (exr images that encode a color transform) for using ACES in Substance Painter.

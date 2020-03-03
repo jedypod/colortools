@@ -1,7 +1,11 @@
 # OCIO Configs
 
+
+
+
+
 # [Modular ACES OCIO Config](/ocio-configs/config_modular-aces.ocio)
-![Modular ACES OCIO Config](/images/modular-aces-ocio-config_screenshot.png)
+
 An OCIO config based on the [ACES 1.2 OCIO config](https://github.com/colour-science/OpenColorIO-Configs/tree/feature/aces-1.2-config/aces_1.2) from the [colour-science](https://github.com/colour-science) [OpenColorIO-Configs git repo](https://github.com/colour-science/OpenColorIO-Configs). 
 
 This description is going to be technical and wordy, so apologies in advance. Here's a pretty picture to keep you interested.
@@ -26,7 +30,7 @@ A very important thing when talking about color science topics is to define your
 
 ![Nuke OCIO Screenshot - DRT](/images/modular-aces_screenshot_nuke-idt.jpg)
 
-Here's another screenshot of the config in action in Nuke.
+### Explanation
 
 With the increasing amount of display rendering transforms (DRT), ACES OCIO configs have gotten increasingly large in file size. The [luts](https://github.com/colour-science/OpenColorIO-Configs/tree/feature/aces-1.2-config/aces_1.2/luts) folder of the latest config is 429.5MiB. This filesize is mostly from the fact that each DRT is baked out into a 3d lut. This lut describes the color transformation from the shaper log encoding of scene linear to the final code values for display on a monitor. The ACES config uses 65x65x65 luts, so each lut is about 9-10MiB. 
 
@@ -34,15 +38,15 @@ When building the [Nuke ACES Output Transforms](https://github.com/jedypod/nuke-
 1. All have the default ACES LMT, described as the `rrt_sweeteners` in the [AMPAS CTL](https://github.com/ampas/aces-dev/blob/master/transforms/ctl/lib/ACESlib.RRT_Common.ctl). Technically, the rrt_sweeteners are included in the Reference Rendering Transform (RRT), but in my opinion, the function of this component of the RRT is to modify the look of the image to render the colors in a more visually appealing way, and thus is should be thought of as an LMT. It's also useful to conceptualize it this way because the `rrt_sweeteners` is actually the only component of the typical ACES display render transform that actually needs a 3d lut. (!)
 2. A tonescale or tonemapping operation to compress the high dynamic range scene linear working space into low dynamic range display linear code values. This operation can be described by a single channel 1d lut since it is only a curve.
 3. A gamut transformation to convert from the working colorspace gamut to the display gamut (with optional gamut limiting and whitepoint compensation). This operation can be described by a matrix transform.
-4. A device transfer function, or EOTF, which compensates for the transfer function of the display.
+4. An EOTF, which compensates for the transfer function of the display.
 
 So instead of doing this in the OCIO config:
 ```
-                |-------|
-                |       |
-      ACES ---->|3D LUT |--> code values
-                |       |
-                |-------| 
+          |--------|      |-------|
+          |        |      |       |
+ACES ---->| SHAPER |----->|3D LUT |--> code values
+          |        |      |       |
+          |--------|      |-------| 
 ```
 
 We could do something like this:
@@ -69,7 +73,6 @@ To keep things simple I'm using a single shaper log space for all output transfo
 
 
 ![Blender OCIO Screenshot](/images/modular-aces_screenshot_blender.png)
-And here's a picture of it in Blender.
 
 
 ### Show Config
