@@ -87,7 +87,7 @@ colorspaces:
     isdata: false
     allocation: lg2
     allocationvars: [-8, 5, 0.00390625]
-    to_reference: !<MatrixTransform> {matrix: [0.73476535, 0.15553665, 0.10969799, 0, 0.09226618, 0.67018014, 0.23755382, 0, 0.00222149, -0.04120818, 1.03898656, 0, 0, 0, 0, 1]}
+    to_reference: !<MatrixTransform> {matrix: [0.72319955, 0.09211238, 0.18468823, 0, -0.00388600, 0.96311677, 0.04076936, 0, 0.00243100, 0.05311371, 0.94445539, 0, 0, 0, 0, 1]}
 
   - !<ColorSpace>
     name: pri_redwg
